@@ -20,9 +20,11 @@
     
     <div class="container">
         <div class="content">
-            <!-- 定场人数输入框 -->
-            <label for="fixedPlayers">定场人数：</label>
-            <input type="number" id="fixedPlayers" min="0"><br>
+            <!-- 选择定场人（多选） -->
+            <label>选择定场人：</label><br>
+            <input type="checkbox" id="haochen" value="Haochen Han"> Haochen Han<br>
+            <input type="checkbox" id="yizhen" value="Yizhen Liang"> Yizhen Liang<br>
+            <input type="checkbox" id="boyue" value="BOYUE QIU"> BOYUE QIU<br>
             
             <!-- 总人数输入框 -->
             <label for="totalPlayers">总人数：</label>
@@ -36,34 +38,41 @@
             <button onclick="calculateFee()">计算</button>
             
             <!-- 结果显示区域 -->
-            <h3>每个参与者需支付给每个定场人： <span id="result">0</span> 欧</h3>
+            <h3><span id="selectedNames">每个参与者需支付</span><span id="perPersonLabel">每人</span>： <span id="result">0</span> 欧</h3>
         </div>
     </div>
     
     <script>
         function calculateFee() {
-            // 获取用户输入的定场人数，并转换为整数，如果输入为空或无效，则默认为 0
-            let fixedPlayers = parseInt(document.getElementById("fixedPlayers").value) || 0;
-            // 获取用户输入的总人数，并转换为整数，如果输入为空或无效，则默认为 0
+            // 获取被选中的定场人
+            let selectedFixedPlayers = [];
+            if (document.getElementById("haochen").checked) selectedFixedPlayers.push("Haochen Han");
+            if (document.getElementById("yizhen").checked) selectedFixedPlayers.push("Yizhen Liang");
+            if (document.getElementById("boyue").checked) selectedFixedPlayers.push("BOYUE QIU");
+            
+            let fixedPlayers = selectedFixedPlayers.length;
             let totalPlayers = parseInt(document.getElementById("totalPlayers").value) || 0;
-            // 获取用户输入的定场总时间（小时），并转换为整数，如果输入为空或无效，则默认为 0
             let totalTime = parseInt(document.getElementById("totalTime").value) || 0;
             
-            // 确保总人数必须大于定场人数，否则弹出警告并终止计算
+            if (fixedPlayers === 0) {
+                alert("请至少选择一位定场人");
+                return;
+            }
+            
             if (totalPlayers <= fixedPlayers) {
                 alert("总人数必须大于定场人数");
                 return;
             }
             
-            // 计算需要支付费用的参与者人数（总人数 - 定场人数）
             let participants = totalPlayers - fixedPlayers;
-            // 计算总费用（每小时 4 欧 × 总时长）
             let totalCost = totalTime * 4;
-            // 计算每个参与者需要支付的费用，并保留两位小数
-            let perPersonCost = (totalCost / participants).toFixed(2);
+            let perPersonCost = (totalCost / participants / fixedPlayers).toFixed(2);
             
-            // 将计算出的费用显示在网页上的 <span id="result"> 中
             document.getElementById("result").innerText = perPersonCost;
+            document.getElementById("selectedNames").innerText = `每个参与者需支付给 ${selectedFixedPlayers.join("、")} `;
+            
+            // 如果只有一个定场人，隐藏“每人”
+            document.getElementById("perPersonLabel").innerText = fixedPlayers === 1 ? "" : "每人";
         }
     </script>
     
