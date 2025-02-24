@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>球球大作战费用计算</title>
+    <style>
+        /* 设置页面布局，使用 flex 让输入框和图片并排 */
+        .container {
+            display: flex;
+            align-items: center;
+        }
+        .content {
+            flex: 1;
+        }
+        .image {
+            margin-left: 20px;
+        }
+        img {
+            max-width: 300px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>球球大作战费用计算</h2>
+    
+    <div class="container">
+        <div class="content">
+            <!-- 定场人数输入框 -->
+            <label for="fixedPlayers">定场人数：</label>
+            <input type="number" id="fixedPlayers" min="0"><br>
+            
+            <!-- 总人数输入框 -->
+            <label for="totalPlayers">总人数：</label>
+            <input type="number" id="totalPlayers" min="1"><br>
+            
+            <!-- 定场总时间输入框 -->
+            <label for="totalTime">定场总时间：</label>
+            <input type="number" id="totalTime" min="1"><br>
+            
+            <!-- 计算按钮，点击后调用 calculateFee() 函数 -->
+            <button onclick="calculateFee()">计算</button>
+            
+            <!-- 结果显示区域 -->
+            <h3>每个参与者需支付给每个定场人： <span id="result">0</span> 欧</h3>
+        </div>
+        
+        <!-- 右侧图片 -->
+        <div class="image">
+            <img src="/Users/links/Downloads/IMG_2857.jpg" alt="示例图片">
+        </div>
+    </div>
+    
+    <script>
+        function calculateFee() {
+            // 获取用户输入的定场人数，并转换为整数，如果输入为空或无效，则默认为 0
+            let fixedPlayers = parseInt(document.getElementById("fixedPlayers").value) || 0;
+            // 获取用户输入的总人数，并转换为整数，如果输入为空或无效，则默认为 0
+            let totalPlayers = parseInt(document.getElementById("totalPlayers").value) || 0;
+            // 获取用户输入的定场总时间（小时），并转换为整数，如果输入为空或无效，则默认为 0
+            let totalTime = parseInt(document.getElementById("totalTime").value) || 0;
+            
+            // 确保总人数必须大于定场人数，否则弹出警告并终止计算
+            if (totalPlayers <= fixedPlayers) {
+                alert("总人数必须大于定场人数");
+                return;
+            }
+            
+            // 计算需要支付费用的参与者人数（总人数 - 定场人数）
+            let participants = totalPlayers - fixedPlayers;
+            // 计算总费用（每小时 4 欧 × 总时长）
+            let totalCost = totalTime * 4;
+            // 计算每个参与者需要支付的费用，并保留两位小数
+            let perPersonCost = (totalCost / participants).toFixed(2);
+            
+            // 将计算出的费用显示在网页上的 <span id="result"> 中
+            document.getElementById("result").innerText = perPersonCost;
+        }
+    </script>
+    
+    <!-- 定场人银行账户信息 -->
+    <h3>定场人银行账户：</h3>
+    <p>IE71AIBK93123348522077 - Haochen Han</p>
+    <p>IE60AIBK93709681617035 - Yizhen Liang</p>
+    <p>IE26AIBK93709679719066 - BOYUE QIU</p>
+</body>
+</html>
